@@ -1,0 +1,9 @@
+out/
+build/
+*.exe
+*.obj
+*.pdb
+*.ilk
+*.suo
+*.user
+.vs/
