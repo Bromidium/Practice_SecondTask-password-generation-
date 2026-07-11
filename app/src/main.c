@@ -10,9 +10,14 @@ main.c - главный модуль программы.
 
 int main(int argc, char** argv) {
     GenOptions opts;
-    // пока для линковки
     init_options(&opts);
-    printf("The structure is initialized\n");
+    printf("first pass\n");
+    int res = parse_args(argc, argv, &opts);
+    if (res != 0) {
+        printf("Error parsing arguments\n");
+        return 1;
+    }
+    printf("Arguments ok\n");
 
     return 0;
 }
