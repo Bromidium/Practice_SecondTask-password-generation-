@@ -14,10 +14,13 @@ int main(int argc, char** argv) {
     printf("first pass\n");
     int res = parse_args(argc, argv, &opts);
     if (res != 0) {
-        printf("Error parsing arguments\n");
         return 1;
     }
-    printf("Arguments ok\n");
+    // результаты парсинга
+    printf("min_len:   %d (given: %s)\n", opts.minl, opts.has_min ? "yes" : "no");
+    printf("max_len:   %d (given: %s)\n", opts.maxl, opts.has_max ? "yes" : "no");
+    printf("exact_len: %d (given: %s)\n", opts.exactl, opts.has_n ? "yes" : "no");
+    printf("count:     %d (given: %s)\n", opts.count, opts.has_c ? "yes" : "no");
 
     return 0;
 }

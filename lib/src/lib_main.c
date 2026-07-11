@@ -103,8 +103,73 @@ int parse_args(int argc, char** argv, GenOptions* opts) {
     }
     // второй проход для разбора самих опций
     for (int i = 1; i < argc; i++) {
-        // -minl, -maxl, -n, -c, -a, -C, -m1, -m2 Добавить логику!!!
-        (void)opts;
+        char* val = NULL;
+
+        // обработка минимальной длины
+        if (match(argv[i], "-minl", seps, sep_cnt, &val, 1)) {
+            if (opts->has_min) {
+                fprintf(stderr, "Error: duplicate option -minl\n");
+                return -1;
+            }
+            opts->has_min = 1;
+
+            if (!val && i + 1 < argc) val = argv[++i];
+            if (!is_numeric(val)) {
+                fprintf(stderr, "Error: -minl requires a numeric value\n");
+                return -1;
+            }
+            opts->minl = atoi(val);
+        }
+        // обработка максммальной длины
+        else if (match(argv[i], "-maxl", seps, sep_cnt, &val, 1)) {
+            if (opts->has_max) {
+                fprintf(stderr, "Error: duplicate option -maxl\n");
+                return -1;
+            }
+            opts->has_max = 1;
+
+            if (!val && i + 1 < argc) val = argv[++i];
+            if (!is_numeric(val)) {
+                fprintf(stderr, "Error: -maxl requires a numeric value\n");
+                return -1;
+            }
+            opts->maxl = atoi(val);
+        }
+        // обработка точной длины
+        else if (match(argv[i], "-n", seps, sep_cnt, &val, 1)) {
+            if (opts->has_n) {
+                fprintf(stderr, "Error: duplicate -n option\n");
+                return -1;
+            }
+            opts->has_n = 1;
+
+            if (!val && i + 1 < argc) val = argv[++i];
+            if (!is_numeric(val)) {
+                fprintf(stderr, "Error: -n requires a numeric value\n");
+                return -1;
+            }
+            opts->exactl = atoi(val);
+        }
+        // обработка количества паролей
+        else if (match(argv[i], "-c", seps, sep_cnt, &val, 1)) {
+            if (opts->has_c) {
+                fprintf(stderr, "Error: duplicate option -c\n");
+                return -1;
+            }
+            opts->has_c = 1;
+
+            if (!val && i + 1 < argc) val = argv[++i];
+            if (!is_numeric(val)) {
+                fprintf(stderr, "Error: -c requires a numeric value\n");
+                return -1;
+            }
+            opts->count = atoi(val);
+            if (opts->count <= 0) {
+                fprintf(stderr, "Error: the number of passwords (-c) must be greater than 0\n");
+                return -1;
+            }
+        }
+        // остальное пока игнор
     }
 
     return 0;
