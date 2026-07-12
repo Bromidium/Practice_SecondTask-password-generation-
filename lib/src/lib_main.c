@@ -275,7 +275,63 @@ int validate_options(const GenOptions* opts) {
 }
 
 int generate_passwords(const GenOptions* opts) {
-    (void)opts;
-    printf("There is no generation yet\n");
+    char alphabet[512] = {0};
+    int alpha_len = 0;
+    // итоговый алфавит
+    if (opts->has_a) {
+        // если есть пользовательсикй
+        strcpy(alphabet, opts->custom_alph);
+        alpha_len = strlen(alphabet);
+    }
+    else {
+        // заздали наборы символов, иначе дефолтные
+        int use_lower = opts->has_C ? opts->use_low : 1;
+        int use_upper = opts->has_C ? opts->use_up : 1;
+        int use_digit = opts->has_C ? opts->use_digit : 1;
+        int use_spec = opts->has_C ? opts->use_spec : 1;
+
+        if (use_lower) { strcat(alphabet, SET_LOWER); alpha_len += strlen(SET_LOWER); }
+        if (use_upper) { strcat(alphabet, SET_UPPER); alpha_len += strlen(SET_UPPER); }
+        if (use_digit) { strcat(alphabet, SET_DIGIT); alpha_len += strlen(SET_DIGIT); }
+        if (use_spec) { strcat(alphabet, SET_SPEC);  alpha_len += strlen(SET_SPEC); }
+    }
+    if (alpha_len == 0) {
+        fprintf(stderr, "Error: resulting alphabet is empty\n");
+        return -1;
+    }
+    srand((unsigned int)time(NULL));
+
+    // генерация паролей
+    for (int i = 0; i < opts->count; i++) {
+        int len = 0;
+        // определение длины
+        if (opts->has_n) {
+            len = opts->exactl;
+        }
+        else {
+            if (opts->has_min && opts->has_max) {
+                len = opts->minl + rand() % (opts->maxl - opts->minl + 1);
+            }
+            else if (opts->has_min) {
+                len = opts->minl;
+            }
+            else if (opts->has_max) {
+                len = opts->maxl;
+            }
+            else {
+                len = 8; // если не задано, дефолт длина
+            }
+        }
+        if (len <= 0) {
+            fprintf(stderr, "Error: password length must be greater than 0\n");
+            return -1;
+        }
+        // вывод посимвольно
+        for (int j = 0; j < len; j++) {
+            putchar(alphabet[rand() % alpha_len]);
+        }
+        putchar('\n');
+    }
+
     return 0;
 }
