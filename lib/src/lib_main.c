@@ -243,9 +243,34 @@ int parse_args(int argc, char** argv, GenOptions* opts) {
 
     return 0;
 }
-// дописать
+
 int validate_options(const GenOptions* opts) {
-    (void)opts;
+    // -n несовместима с -minl/-maxl
+    if (opts->has_n && (opts->has_min || opts->has_max)) {
+        fprintf(stderr, "Error: option -n is incompatible with -minl/-maxl\n");
+        return -1;
+    }
+    // -a несовместима с -C
+    if (opts->has_a && opts->has_C) {
+        fprintf(stderr, "Error: -a and -C options are incompatible\n");
+        return -1;
+    }
+    // -minl не должна быть больше -maxl
+    if (opts->has_min && opts->has_max && opts->minl > opts->maxl) {
+        fprintf(stderr, "Error: minl is greater than -maxl\n");
+        return -1;
+    }
+    // есть -m1, должна быть -m2 (обратное вроде не надо)
+    if (opts->has_m1 && !opts->has_m2) {
+        fprintf(stderr, "Error: if -m1, -m2 must be\n");
+        return -1;
+    }
+    // -m1 -m2 нельзя вместе с -n
+    if ((opts->has_m1 || opts->has_m2) && opts->has_n) {
+        fprintf(stderr, "Error: -m1/-m2 should not be with -n\n");
+        return -1;
+    }
+
     return 0;
 }
 
