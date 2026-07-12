@@ -169,12 +169,81 @@ int parse_args(int argc, char** argv, GenOptions* opts) {
                 return -1;
             }
         }
-        // остальное пока игнор
+        // обработка пользовательского алфавитв -a
+        else if (match(argv[i], "-a", seps, sep_cnt, &val, 0)) {
+            if (opts->has_a) {
+                fprintf(stderr, "Error: duplicate option -a\n");
+                return -1;
+            }
+            opts->has_a = 1;
+
+            if (!val && i + 1 < argc) val = argv[++i];
+            if (!val || *val == '\0') {
+                fprintf(stderr, "Error: -a requires a value\n");
+                return -1;
+            }
+            opts->custom_alph = val;
+        }
+        // обработка наборов символов -C
+        else if (match(argv[i], "-C", seps, sep_cnt, &val, 0)) {
+            if (opts->has_C) {
+                fprintf(stderr, "Error: duplicate option -C\n");
+                return -1;
+            }
+            opts->has_C = 1;
+            if (!val && i + 1 < argc) val = argv[++i];
+            if (!val || *val == '\0') {
+                fprintf(stderr, "Error: -С requires a value\n");
+                return -1;
+            }
+            // проверка на валидность и дубликаты 
+            int seen[4] = { 0 };
+            for (int j = 0; val[j] != '\0'; j++) {
+                int idx = -1;
+                if (val[j] == 'a') idx = 0;
+                else if (val[j] == 'A') idx = 1;
+                else if (val[j] == 'D') idx = 2;
+                else if (val[j] == 'S') idx = 3;
+
+                if (idx == -1) {
+                    fprintf(stderr, "Error: invalid character '%c' in -C\n", val[j]);
+                    return -1;
+                }
+                if (seen[idx]) {
+                    fprintf(stderr, "Error: duplicate character '%c' in -C\n", val[j]);
+                    return -1;
+                }
+                seen[idx] = 1;
+            }
+
+            // ставим флаги использования наборов
+            for (int j = 0; val[j] != '\0'; j++) {
+                if (val[j] == 'a') opts->use_low = 1;
+                else if (val[j] == 'A') opts->use_up = 1;
+                else if (val[j] == 'D') opts->use_digit = 1;
+                else if (val[j] == 'S') opts->use_spec = 1;
+            }
+        }
+        // обработка -m1 и -m2
+        else if (match(argv[i], "-m1", seps, sep_cnt, &val, 0)) {
+            if (opts->has_m1) {
+                fprintf(stderr, "Error: duplicate option -m1\n");
+                return -1;
+            }
+            opts->has_m1 = 1;
+        }
+        else if (match(argv[i], "-m2", seps, sep_cnt, &val, 0)) {
+            if (opts->has_m2) {
+                fprintf(stderr, "Error: duplicate option -m2\n");
+                return -1;
+            }
+            opts->has_m2 = 1;
+        }
     }
 
     return 0;
 }
-
+// дописать
 int validate_options(const GenOptions* opts) {
     (void)opts;
     return 0;
