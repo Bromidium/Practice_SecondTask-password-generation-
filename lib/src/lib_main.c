@@ -10,10 +10,15 @@ lib_main.c - главный модуль библиотеки.
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#define MAX_ALPH_SIZE 512
+#define DEFAULT_PASS_LEN 8
 #define SET_LOWER "abcdefghijklmnopqrstuvwxyz"
 #define SET_UPPER "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 #define SET_DIGIT "0123456789"
 #define SET_SPEC  "!@#$%^&*()-_=+[]{}|;:,.<>?"
+
+
+
 
 void init_options(GenOptions* opts) {
     memset(opts, 0, sizeof(GenOptions)); // все флаги = 0
@@ -275,11 +280,14 @@ int validate_options(const GenOptions* opts) {
 }
 
 int generate_passwords(const GenOptions* opts) {
-    char alphabet[512] = {0};
+    char alphabet[MAX_ALPH_SIZE] = {0};
     int alpha_len = 0;
     // итоговый алфавит
     if (opts->has_a) {
-        // если есть пользовательсикй
+        if (strlen(opts->custom_alph) >= MAX_ALPH_SIZE) {
+            fprintf(stderr, "Error: the alphabet is too long, maximum %d characters", MAX_ALPH_SIZE - 1);
+            return -1;
+        }
         strcpy(alphabet, opts->custom_alph);
         alpha_len = strlen(alphabet);
     }
@@ -319,7 +327,7 @@ int generate_passwords(const GenOptions* opts) {
                 len = opts->maxl;
             }
             else {
-                len = 8; // если не задано, дефолт длина
+                len = DEFAULT_PASS_LEN; // если не задано, дефолт длина
             }
         }
         if (len <= 0) {
