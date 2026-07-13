@@ -1,3 +1,6 @@
 LIBRARY app_lib
 EXPORTS
-    LibAddFunction
+    init_options
+    parse_args
+    validate_options
+    generate_passwords
