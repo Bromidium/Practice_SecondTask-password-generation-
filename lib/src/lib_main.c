@@ -118,7 +118,15 @@ int parse_args(int argc, char** argv, GenOptions* opts) {
             }
             opts->has_min = 1;
 
-            if (!val && i + 1 < argc) val = argv[++i];
+            if (!val) {
+                if (i + 1 < argc && argv[i + 1][0] != '-') {
+                    val = argv[++i];
+                }
+                else {
+                    fprintf(stderr, "Error: option -minl requires a numeric value\n");
+                    return -1;
+                }
+            }
             if (!is_numeric(val)) {
                 fprintf(stderr, "Error: -minl requires a numeric value\n");
                 return -1;
@@ -133,7 +141,15 @@ int parse_args(int argc, char** argv, GenOptions* opts) {
             }
             opts->has_max = 1;
 
-            if (!val && i + 1 < argc) val = argv[++i];
+            if (!val) {
+                if (i + 1 < argc && argv[i + 1][0] != '-') {
+                    val = argv[++i];
+                }
+                else {
+                    fprintf(stderr, "Error: option -maxl requires a numeric value\n");
+                    return -1;
+                }
+            }
             if (!is_numeric(val)) {
                 fprintf(stderr, "Error: -maxl requires a numeric value\n");
                 return -1;
@@ -148,7 +164,15 @@ int parse_args(int argc, char** argv, GenOptions* opts) {
             }
             opts->has_n = 1;
 
-            if (!val && i + 1 < argc) val = argv[++i];
+            if (!val) {
+                if (i + 1 < argc && argv[i + 1][0] != '-') {
+                    val = argv[++i];
+                }
+                else {
+                    fprintf(stderr, "Error: option -n requires a numeric value\n");
+                    return -1;
+                }
+            }
             if (!is_numeric(val)) {
                 fprintf(stderr, "Error: -n requires a numeric value\n");
                 return -1;
@@ -163,7 +187,15 @@ int parse_args(int argc, char** argv, GenOptions* opts) {
             }
             opts->has_c = 1;
 
-            if (!val && i + 1 < argc) val = argv[++i];
+            if (!val) {
+                if (i + 1 < argc && argv[i + 1][0] != '-') {
+                    val = argv[++i];
+                }
+                else {
+                    fprintf(stderr, "Error: option -c requires a numeric value\n");
+                    return -1;
+                }
+            }
             if (!is_numeric(val)) {
                 fprintf(stderr, "Error: -c requires a numeric value\n");
                 return -1;
@@ -182,7 +214,15 @@ int parse_args(int argc, char** argv, GenOptions* opts) {
             }
             opts->has_a = 1;
 
-            if (!val && i + 1 < argc) val = argv[++i];
+            if (!val) {
+                if (i + 1 < argc && argv[i + 1][0] != '-') {
+                    val = argv[++i];
+                }
+                else {
+                    fprintf(stderr, "Error: option -a requires a value\n");
+                    return -1;
+                }
+            }
             if (!val || *val == '\0') {
                 fprintf(stderr, "Error: -a requires a value\n");
                 return -1;
@@ -196,7 +236,15 @@ int parse_args(int argc, char** argv, GenOptions* opts) {
                 return -1;
             }
             opts->has_C = 1;
-            if (!val && i + 1 < argc) val = argv[++i];
+            if (!val) {
+                if (i + 1 < argc && argv[i + 1][0] != '-') {
+                    val = argv[++i];
+                }
+                else {
+                    fprintf(stderr, "Error: option -C requires a value\n");
+                    return -1;
+                }
+            }
             if (!val || *val == '\0') {
                 fprintf(stderr, "Error: -С requires a value\n");
                 return -1;
