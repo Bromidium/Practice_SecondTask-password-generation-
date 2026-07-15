@@ -9,14 +9,14 @@ lib_main.h - заголовочный файл модуля lib_main.c.
 #define LIB_MAIN_H
 
 typedef struct {
-    int minl;       
-    int maxl;       
-    int exactl;     
+    int min_len;       
+    int max_len;       
+    int exact_len;     
     int count;         
-    char* custom_alph; 
+    char* custom_alpha; 
     // флаги использования наборов символов
-    int use_low;      
-    int use_up;      
+    int use_lower;      
+    int use_upper;      
     int use_digit;      
     int use_spec;       
     // флаги наличия 
@@ -26,9 +26,6 @@ typedef struct {
     int has_c;
     int has_C;
     int has_a;
-    // флаги для проверки, что -m1 -m2 вместе
-    int has_m1;
-    int has_m2;
 } GenOptions;
 
 void init_options(GenOptions* opts);
